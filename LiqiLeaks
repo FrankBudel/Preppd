@@ -1,0 +1,96 @@
+Public Sub LiqiLeaks()
+Dim Sup As String
+Dim Ref As String
+Dim Depo As Integer
+Dim DepoDate As Date
+Dim Trms As Integer
+Dim TrmAmount As Integer
+Dim StartDate As Date
+Dim TrmLength As Integer
+Dim LastRow As Integer
+Dim Fin As Integer
+Dim FinDate As Date
+
+LastRow = Cells(Rows.Count, "A").End(xlUp).Row
+
+Sup = InputBox("Leverancier:")
+Ref = InputBox("Referentie:")
+Depo = InputBox("Bedrag aanbetaling:")
+DepoDate = InputBox("Datum aanbetaling:")
+
+If Depo > 0 Then
+If LastRow = 2 And Cells(2, "D").Value = "" Then
+Cells(LastRow, "A").Value = Ref
+Cells(LastRow, "B").Value = Sup
+Cells(LastRow, "D").Value = Depo
+Cells(LastRow, "E").Value = DepoDate
+Cells(LastRow, "F").Value = WorksheetFunction.WeekNum(Cells(LastRow, "E"), vbMonday)
+Cells(LastRow, "G").Value = Year(Cells(LastRow, "E"))
+Else
+Cells(LastRow + 1, "A").Value = Ref
+Cells(LastRow + 1, "B").Value = Sup
+Cells(LastRow + 1, "D").Value = Depo
+Cells(LastRow + 1, "F").Value = WorksheetFunction.WeekNum(Cells(LastRow + 1, "E"), vbMonday)
+Cells(LastRow + 1, "G").Value = Year(Cells(LastRow + 1, "E"))
+End If
+Else
+End If
+
+Trms = InputBox("Aantal termijnen:")
+TrmAmount = InputBox("Termijnbedrag:")
+StartDate = InputBox("Betaaldatum eerste termijn:")
+TrmLength = InputBox("Termijnlengte:")
+
+LastRow = Cells(Rows.Count, "A").End(xlUp).Row
+
+If LastRow = 2 And Cells(2, "D").Value = "" Then
+For Trms = 1 To Trms
+Cells(Trms + LastRow - 1, "A").Value = Ref
+Cells(Trms + LastRow - 1, "B").Value = Sup
+Cells(Trms + LastRow - 1, "C").Value = Trms
+Cells(Trms + LastRow - 1, "D").Value = TrmAmount
+Cells(Trms + LastRow - 1, "E").Value = (StartDate + (TrmLength * (Trms - 1)))
+Cells(Trms + LastRow - 1, "F").Value = WorksheetFunction.WeekNum(Cells(Trms + LastRow - 1, "E"), vbMonday)
+Cells(Trms + LastRow - 1, "G").Value = Year(Cells(LastRow, "E"))
+Next Trms
+Else
+For Trms = 1 To Trms
+Cells(Trms + LastRow, "A").Value = Ref
+Cells(Trms + LastRow, "B").Value = Sup
+Cells(Trms + LastRow, "C").Value = Trms
+Cells(Trms + LastRow, "D").Value = TrmAmount
+Cells(Trms + LastRow, "E").Value = (StartDate + (TrmLength * (Trms - 1)))
+Cells(Trms + LastRow, "F").Value = WorksheetFunction.WeekNum(Cells(Trms + LastRow, "E"), vbMonday)
+Cells(Trms + LastRow, "G").Value = Year(Cells(LastRow, "E"))
+Next Trms
+End If
+
+Fin = InputBox("Bedrag slotbetaling")
+FinDate = InputBox("Datum slotbetaling")
+
+LastRow = Cells(Rows.Count, "A").End(xlUp).Row
+
+If Fin > 0 Then
+If LastRow = 2 And Cells(2, "D").Value = "" Then
+Cells(LastRow, "A").Value = Ref
+Cells(LastRow, "B").Value = Sup
+Cells(LastRow, "D").Value = Fin
+Cells(LastRow, "E").Value = FinDate
+Cells(LastRow, "F").Value = WorksheetFunction.WeekNum(Cells(LastRow, "E"), vbMonday)
+Cells(LastRow, "G").Value = Year(Cells(LastRow, "E"))
+Else
+Cells(LastRow + 1, "A").Value = Ref
+Cells(LastRow + 1, "B").Value = Sup
+Cells(LastRow + 1, "D").Value = Fin
+Cells(LastRow + 1, "E").Value = FinDate
+Cells(LastRow + 1, "F").Value = WorksheetFunction.WeekNum(Cells(LastRow + 1, "E"), vbMonday)
+Cells(LastRow + 1, "G").Value = Year(Cells(LastRow + 1, "E"))
+End If
+Else
+End If
+
+Sheets("Weekplanning").Select
+ActiveSheet.PivotTables("Draaitabel1").PivotCache.Refresh
+Sheets("Termijnen").Select
+
+End Sub
